@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5655362120842461532
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2412904878879194271}
+  - component: {fileID: 8026106429631632548}
+  - component: {fileID: -7964483058134790461}
+  m_Layer: 0
+  m_Name: ServerBoss
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2412904878879194271
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5655362120842461532}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8026106429631632548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5655362120842461532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c46eba018428944f97e4e50f2d8c2ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  headQuarters: {fileID: 3985393520164051796, guid: db8128ac3248b1f44aaa388065a18111,
+    type: 3}
+  tile: {fileID: 2047594714106900096, guid: f4ebee5c253f3f74c818ad27af237221, type: 3}
+  dbmanager: {fileID: 6846313232437807014, guid: c3d945e9c1783874194b40265d78090a,
+    type: 3}
+  squig: {fileID: 882336246241482207, guid: 45a55772e892c194684b8b680d61045c, type: 3}
+  techTree: {fileID: 4863360560513841719, guid: 110a281e5d1ae034fbd4008e21ae3c13,
+    type: 3}
+  enemyManager: {fileID: 8998088629405253340, guid: 49075dfa73ba54d4d958ed9631cbc152,
+    type: 3}
+  player: {fileID: 7666847063820690507, guid: 6995bf4680bb42b4ea26ab3551705923, type: 3}
+  hqHealth:
+    m_InternalValue: 0
+--- !u!114 &-7964483058134790461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5655362120842461532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
