@@ -30,7 +30,7 @@ public class PlayerC : NetworkBehaviour
     private void Start()
     {
         if (!IsOwner) { return; }
-        StartCoroutine(SetUpPlayer());
+        SetUpPlayer();
 
         for (int i = -5; i <= 5; i++)
         {
@@ -56,13 +56,11 @@ public class PlayerC : NetworkBehaviour
         myPosition.y = Mathf.Clamp(myPosition.y, 10, 30);
         myPosition.z = Mathf.Clamp(myPosition.z, -40, 15); // -27.5 - 12.5, 27.5 - 12.5
 
-        transform.position = myPosition;
-
-        
+        transform.position = myPosition;        
     }
-    IEnumerator SetUpPlayer()
+    private void SetUpPlayer()
     {
-        yield return new WaitUntil(() => NetworkManager.Singleton.LocalClient != null); // is this necessary
+        //yield return new WaitUntil(() => NetworkManager.Singleton.LocalClient != null); // is this necessary
         clientConnected = true;
         Camera.main.transform.parent = NetworkManager.Singleton.LocalClient.PlayerObject.gameObject.transform;
         Camera.main.transform.localPosition = Vector3.zero;
@@ -72,7 +70,7 @@ public class PlayerC : NetworkBehaviour
         if (dbObj == null)
         {
             Debug.LogError("DBManager is not instancieted");
-            yield return null;
+            return;
         }    
 
         db = dbObj.GetComponent<DBmanager>();
@@ -86,6 +84,7 @@ public class PlayerC : NetworkBehaviour
         //db.DisplayEntriesServerRpc();
         
         //db.GetComponent<DBmanager>().EditEntryServerRpc(PlayerPrefs.GetString("guid"), 0);
+        
     }
 
     [ServerRpc]
