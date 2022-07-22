@@ -58,8 +58,9 @@ public class ServerBoss : NetworkBehaviour
     {
         yield return new WaitForSeconds(5);
 
-        GameObject go = Instantiate(squig, new Vector3(25,0,25), Quaternion.identity);
-        go.GetComponent<NetworkObject>().Spawn();
+        //GameObject go = Instantiate(squig, new Vector3(25,0,25), Quaternion.identity);
+        //go.GetComponent<NetworkObject>().Spawn();
+
         //for (float j = 0; j < 2.5; j = j + 0.5f) // 5 rounds
         //{
         //    for (float i = j; i < j + 0.5; i = i + 0.1f)

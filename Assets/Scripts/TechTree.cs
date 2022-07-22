@@ -7,6 +7,7 @@ public class TechTree : NetworkBehaviour
 {
     GameObject player;
     DBmanager db;
+    public bool turnOff = true;
     private void Start()
     {
         if (!NetworkManager.Singleton.IsClient) { return; }
@@ -15,6 +16,7 @@ public class TechTree : NetworkBehaviour
     void OnGUI()
     {
         if (player == null) { return; }
+        if (turnOff == true) { return; }
         GUILayout.BeginArea(new Rect(10, 100, 100, 300));
 
         if (GUILayout.Button("Upgrade1"))
