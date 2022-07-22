@@ -18,13 +18,17 @@ public class PlayerC : NetworkBehaviour
     public GameObject pom;
     public GameObject fireTower;
 
+    public bool upgrade1 = false;
+    public bool upgrade2 = false;
+    public bool upgrade3 = false;
+
     public List<GameObject> tiles = new List<GameObject>();
     Vector3 myPosition = new();
     public override void OnNetworkSpawn()
     {
         if (!IsOwner) { return; }
         
-        gold = 10000;
+        gold = 1000;
     }
 
     private void Start()
@@ -71,20 +75,25 @@ public class PlayerC : NetworkBehaviour
         {
             Debug.LogError("DBManager is not instancieted");
             return;
-        }    
-
+        }
         db = dbObj.GetComponent<DBmanager>();
+
         if (PlayerPrefs.GetInt("newPlayer") == 1)
         {
-            db.AddEntryServerRpc(PlayerPrefs.GetString("guid"), PlayerPrefs.GetInt("money"));
             PlayerPrefs.SetInt("newPlayer", 0);
+            PlayerPrefs.Save();
+            db.RunSqlServerRpc("INSERT INTO Players (guid) VALUES ('" + PlayerPrefs.GetString("guid") + "');");
         }
-        db.CreateTServerRpc(); // make sure table is on server
-        //db.PullEntryServerRpc(PlayerPrefs.GetString("guid"));
-        //db.DisplayEntriesServerRpc();
-        
+        // Load my upgrades!
+        db.PullPlayerUpgradesServerRpc(PlayerPrefs.GetString("guid"), NetworkManager.LocalClient.ClientId);
+
+
+        /*db.CreateTServerRpc();*/ // make sure table is on server
+                                   //db.PullEntryServerRpc(PlayerPrefs.GetString("guid"));
+                                   //db.DisplayEntriesServerRpc();
+
         //db.GetComponent<DBmanager>().EditEntryServerRpc(PlayerPrefs.GetString("guid"), 0);
-        
+
     }
 
     [ServerRpc]
@@ -136,6 +145,6 @@ public class PlayerC : NetworkBehaviour
     private void OnApplicationQuit()
     {
         if (!IsOwner) { return; }
-        db.EditEntryServerRpc(PlayerPrefs.GetString("guid"), PlayerPrefs.GetInt("money")); // save money        
+        //db.EditEntryServerRpc(PlayerPrefs.GetString("guid"), PlayerPrefs.GetInt("money")); // save money        
     }
 }

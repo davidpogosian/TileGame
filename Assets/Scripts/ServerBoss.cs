@@ -19,7 +19,7 @@ public class ServerBoss : NetworkBehaviour
 
     private void Start()
     {        
-        if (!NetworkManager.Singleton.IsServer) 
+        if (!NetworkManager.Singleton.IsServer) //race?
         {
             SpawnPlayerServerRpc(NetworkManager.Singleton.LocalClientId);
             return;
@@ -30,7 +30,7 @@ public class ServerBoss : NetworkBehaviour
         hq.GetComponent<NetworkObject>().Spawn();
 
         GameObject db = Instantiate(dbmanager, Vector3.zero, Quaternion.identity);
-        db.GetComponent<NetworkObject>().Spawn(); // dont think they need it?
+        db.GetComponent<NetworkObject>().Spawn();
         
         GameObject tt = Instantiate(techTree, Vector3.zero, Quaternion.identity);
         tt.GetComponent<NetworkObject>().Spawn();
