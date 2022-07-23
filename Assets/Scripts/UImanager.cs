@@ -6,7 +6,7 @@ using TMPro;
 using System;
 using UnityEngine.UI;
 
-public class UImanager : MonoBehaviour
+public class UImanager : NetworkBehaviour
 {
     public GameObject moneyDisplay;
     public GameObject timerDisplay;
@@ -22,6 +22,14 @@ public class UImanager : MonoBehaviour
     bool TTup = false;
 
     public bool gameStarted = false;
+    GameObject player;
+    DBmanager db;
+
+    private void Start()
+    {
+        if (!NetworkManager.Singleton.IsClient) { return; }
+        StartCoroutine(WaitForPlayer());
+    }
 
     private void Update()
     {
@@ -56,6 +64,25 @@ public class UImanager : MonoBehaviour
         }
     }
 
+    private void OnGUI()
+    {
+        GUILayout.BeginArea(new Rect(100, 100, 100, 300));
+
+        if (GUILayout.Button("Fire Tower"))
+        {
+            Debug.Log("fire tower");
+            player.GetComponent<PlayerC>().structIndex = 1;
+            LocalTile.cost = 75;
+        }
+        if (GUILayout.Button("Ball Tower"))
+        {
+            player.GetComponent<PlayerC>().structIndex = 0;
+            LocalTile.cost = 50;
+        }
+
+        GUILayout.EndArea();
+    }
+
     public void ToggleTT()
     {
         TTup = true;
@@ -64,5 +91,48 @@ public class UImanager : MonoBehaviour
         ttUpgrade2.SetActive(!ttUpgrade2.activeSelf);
         ttUpgrade3.SetActive(!ttUpgrade3.activeSelf);
         ttButton.SetActive(!ttButton.activeSelf);
+    }
+
+    IEnumerator WaitForPlayer()
+    {
+        yield return new WaitUntil(() => NetworkManager.Singleton.LocalClient.PlayerObject != null); // necessary?
+        player = NetworkManager.Singleton.LocalClient.PlayerObject.gameObject;
+
+        var dbObj = GameObject.Find("DBmanager(Clone)");
+        if (dbObj == null)
+        {
+            Debug.LogError("DBManager is not instancieted");
+        }
+        db = dbObj.GetComponent<DBmanager>();
+    }
+
+    public void Upgrade1()
+    {
+        if (player.GetComponent<PlayerC>().gold >= 200 && player.GetComponent<PlayerC>().upgrade1 == false)
+        {
+            player.GetComponent<PlayerC>().upgrade1 = true;
+            player.GetComponent<PlayerC>().gold -= 200;
+            BuySomethingServerRpc("Vitality", PlayerPrefs.GetString("guid"));
+        }
+    }
+
+    public void Upgrade2()
+    {
+        if (player.GetComponent<PlayerC>().gold >= 200 && player.GetComponent<PlayerC>().upgrade2 == false)
+        {
+            player.GetComponent<PlayerC>().upgrade2 = true;
+            player.GetComponent<PlayerC>().gold -= 200;
+            BuySomethingServerRpc("Strength", PlayerPrefs.GetString("guid"));
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void BuySomethingServerRpc(string item, string guid)
+    {
+        int player_id = db.Pullid("SELECT id FROM Players WHERE guid = '" + guid + "';");
+        int upgrade_id = db.Pullid("SELECT id FROM Upgrades WHERE upgrade = '" + item + "';");
+
+        db.RunSql(string.Format("INSERT INTO PandU (player_id, upgrade_id) VALUES ({0},{1});", player_id, upgrade_id));
+
     }
 }

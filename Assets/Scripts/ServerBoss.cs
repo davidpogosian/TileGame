@@ -11,6 +11,7 @@ public class ServerBoss : NetworkBehaviour
     public GameObject squig;
     public GameObject techTree;
     public GameObject enemyManager;
+    public GameObject UI;
 
     public GameObject player;
 
@@ -32,8 +33,11 @@ public class ServerBoss : NetworkBehaviour
         GameObject db = Instantiate(dbmanager, Vector3.zero, Quaternion.identity);
         db.GetComponent<NetworkObject>().Spawn();
         
-        GameObject tt = Instantiate(techTree, Vector3.zero, Quaternion.identity);
-        tt.GetComponent<NetworkObject>().Spawn();
+        //GameObject tt = Instantiate(techTree, Vector3.zero, Quaternion.identity);
+        //tt.GetComponent<NetworkObject>().Spawn();
+
+        GameObject ui = Instantiate(UI, Vector3.zero, Quaternion.identity);
+        ui.GetComponent<NetworkObject>().Spawn();
 
         for (int i = -5; i <= 5; i++)
         {

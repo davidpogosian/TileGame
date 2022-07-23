@@ -55,6 +55,7 @@ MonoBehaviour:
     type: 3}
   enemyManager: {fileID: 8998088629405253340, guid: 49075dfa73ba54d4d958ed9631cbc152,
     type: 3}
+  UI: {fileID: 3066095291165725370, guid: 0fb5f5ac1d0a397498b2a69f3c1d3322, type: 3}
   player: {fileID: 7666847063820690507, guid: 6995bf4680bb42b4ea26ab3551705923, type: 3}
   hqHealth:
     m_InternalValue: 0

@@ -13,7 +13,7 @@ namespace HelloWorld
         public GameObject serverBoss;
         private void Start()
         {
-            //PlayerPrefs.DeleteAll(); // DELETE
+            PlayerPrefs.DeleteAll(); // DELETE
             NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
             NetworkManager.Singleton.GetComponent<Unity.Netcode.Transports.UTP.UnityTransport>().ConnectionData.Port = ushort.Parse("4444"); // maybe wont work on UNET
 
