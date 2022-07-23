@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using UnityEditor;
-
+using UnityEngine.EventSystems;
 public class LocalTile : MonoBehaviour 
 {
     Renderer rend;
@@ -38,6 +38,7 @@ public class LocalTile : MonoBehaviour
     }
     private void OnMouseDown()
     {
+        if (EventSystem.current.IsPointerOverGameObject()) { return; }
 
         if (player.GetComponent<PlayerC>().gold >= cost && occupied == false)
         {
