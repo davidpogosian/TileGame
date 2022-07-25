@@ -26,7 +26,6 @@ public class SquigBehaviour : NetworkBehaviour
     private void Start()
     {
         if (!IsServer) { return; }
-        Debug.Log("SQUIG MADE");
         squigHP.Value = 100;
         foreach (GameObject go in GameObject.FindGameObjectsWithTag("HeadQuarters"))
         {

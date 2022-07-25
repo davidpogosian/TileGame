@@ -58,8 +58,16 @@ public class Building : NetworkBehaviour
                 Collider[] inRange = Physics.OverlapSphere(transform.position, 30, 64);
                 if (inRange.Length > 0)
                 {
-                    target = inRange[0].transform.parent.gameObject;
-                    state = BuildingState.lockedIn;
+                    foreach (Collider c in inRange)
+                    {
+                        if (c.transform.parent.GetComponent<NetworkObject>().OwnerClientId != NetworkObject.OwnerClientId)
+                        {
+                            target = inRange[0].transform.parent.gameObject;
+                            state = BuildingState.lockedIn;
+                            break;
+                        }
+                    }
+                    
                 }
                 break;
             case BuildingState.lockedIn:
