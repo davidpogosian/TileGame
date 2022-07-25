@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3985393520164051797}
   m_Layer: 3
   m_Name: HeadQuarters
-  m_TagString: Untagged
+  m_TagString: HeadQuarters
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

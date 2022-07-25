@@ -19,13 +19,26 @@ public class LocalTile : MonoBehaviour
         rend = GetComponent<Renderer>();
         myIndex = player.GetComponent<PlayerC>().tiles.IndexOf(gameObject);
 
-        if (myIndex == 60) // occupy center
+        //if (myIndex == 60) // occupy center
+        //{
+        //    occupied = true;
+        //}
+        //if (myIndex == 120) // occupy spawn
+        //{
+        //    occupied = true;
+        //}
+        List<Vector3> occupiedByHq = new List<Vector3>();
+        foreach (GameObject hq in GameObject.FindGameObjectsWithTag("HeadQuarters"))
         {
-            occupied = true;
+            occupiedByHq.Add(hq.transform.position);
         }
-        if (myIndex == 120) // occupy spawn
+
+        foreach (Vector3 pos in occupiedByHq)
         {
-            occupied = true;
+            if (pos.x == transform.position.x && pos.z == transform.position.z)
+            {
+                occupied = true;
+            }
         }
     }
     private void OnMouseEnter()
@@ -38,7 +51,7 @@ public class LocalTile : MonoBehaviour
     }
     private void OnMouseDown()
     {
-        if (EventSystem.current.IsPointerOverGameObject()) { return; }
+        if (EventSystem.current.IsPointerOverGameObject()) { return; } // ui now blocks clicks
 
         if (player.GetComponent<PlayerC>().gold >= cost && occupied == false)
         {

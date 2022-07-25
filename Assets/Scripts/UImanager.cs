@@ -68,16 +68,20 @@ public class UImanager : NetworkBehaviour
     {
         GUILayout.BeginArea(new Rect(100, 100, 100, 300));
 
-        if (GUILayout.Button("Fire Tower"))
+        if (GUILayout.Button("Wall"))
         {
-            Debug.Log("fire tower");
             player.GetComponent<PlayerC>().structIndex = 1;
-            LocalTile.cost = 75;
+            LocalTile.cost = 25;
         }
         if (GUILayout.Button("Ball Tower"))
         {
             player.GetComponent<PlayerC>().structIndex = 0;
             LocalTile.cost = 50;
+        }
+        if (GUILayout.Button("Squig"))
+        {
+            player.GetComponent<PlayerC>().structIndex = 2;
+            LocalTile.cost = 100;
         }
 
         GUILayout.EndArea();

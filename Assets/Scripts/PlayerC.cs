@@ -17,6 +17,7 @@ public class PlayerC : NetworkBehaviour
     public GameObject building;
     public GameObject pom;
     public GameObject fireTower;
+    public GameObject squig;
 
     public bool upgrade1 = false;
     public bool upgrade2 = false;
@@ -56,9 +57,9 @@ public class PlayerC : NetworkBehaviour
 
         myPosition += 10 * Time.deltaTime * new Vector3(hor, Input.mouseScrollDelta.y * scrollmulti, vert);
 
-        myPosition.x = Mathf.Clamp(myPosition.x, -27.5f, 27.5f);
+        myPosition.x = Mathf.Clamp(myPosition.x, -52.5f, 52.5f);
         myPosition.y = Mathf.Clamp(myPosition.y, 10, 30);
-        myPosition.z = Mathf.Clamp(myPosition.z, -40, 15); // -27.5 - 12.5, 27.5 - 12.5
+        myPosition.z = Mathf.Clamp(myPosition.z, -60f, 40f);
 
         transform.position = myPosition;        
     }
@@ -111,9 +112,13 @@ public class PlayerC : NetworkBehaviour
         //GameObject bullet = Instantiate(pom, pos + new Vector3(0, 6, 0), Quaternion.identity);
         //bullet.transform.parent = go.transform;
         //bullet.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
-
-        DeclareOccupiedClientRpc(tileIndex);
-        GameObject.Find("ServerBoss(Clone)").GetComponent<ServerBoss>().DeleteNode(tileIndex);
+        if (structIndex != 2)
+        {
+            GameObject.Find("ServerBoss(Clone)").GetComponent<ServerBoss>().DeleteNode(tileIndex);
+            DeclareOccupiedClientRpc(tileIndex);
+        }
+        
+        
 
 
         switch (structIndex)
@@ -128,6 +133,10 @@ public class PlayerC : NetworkBehaviour
             case 1:
                 GameObject ft = Instantiate(fireTower, pos, Quaternion.identity);
                 ft.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
+                break;
+            case 2:
+                GameObject sq = Instantiate(squig, pos, Quaternion.identity);
+                sq.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
                 break;
         }
     }

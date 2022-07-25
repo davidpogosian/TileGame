@@ -13,27 +13,38 @@ public class SquigBehaviour : NetworkBehaviour
     public int onStep = 0;
     bool blocked = false;
     public bool obstruction = false;
+    Vector3 targetPos;
 
     private void Start()
     {
         if (!IsServer) { return; }
+        Debug.Log("SQUIG MADE");
         squigHP.Value = 100;
+        foreach (GameObject go in GameObject.FindGameObjectsWithTag("HeadQuarters"))
+        {
+            if (!go.GetComponent<NetworkObject>().IsOwner)
+            {
+                targetPos = go.transform.position;
+            }
+        }
+
+        Debug.Log("target: " + targetPos);
     }
-    
+
     void Update()
     {
         if (!IsServer) { return; }
 
-        if (transform.position != Vector3.zero && !blocked)
+        if (transform.position != targetPos && !blocked)
         {
             if (!followingPath)
             {
-
                 currentPath = AStarPath(transform.position);
                 followingPath = true;
                 onStep = 0;
                 if (currentPath == null) // no path
                 {
+                    Debug.Log("blocked is true");
                     blocked = true;
                     return;
                 }
@@ -47,14 +58,19 @@ public class SquigBehaviour : NetworkBehaviour
         }
         else
         {
-            DeclareVacantClientRpc(currentPath[currentPath.Count-2].myTileIndex); // cleanup
-
-            GameObject.Find("ServerBoss(Clone)").GetComponent<ServerBoss>().hqHealth.Value -= 10;
-            Debug.Log("new hp is: " + GameObject.Find("ServerBoss(Clone)").GetComponent<ServerBoss>().hqHealth.Value);
-            Destroy(gameObject); // not good
+            Debug.Log("smack");
+            if (!blocked)
+            {
+                DeclareVacantClientRpc(currentPath[currentPath.Count - 2].myTileIndex); // cleanup
+                GameObject.Find("ServerBoss(Clone)").GetComponent<ServerBoss>().hqHealth.Value -= 10;
+                Debug.Log("new hp is: " + GameObject.Find("ServerBoss(Clone)").GetComponent<ServerBoss>().hqHealth.Value);
+                Destroy(gameObject); // not good
+            }
+            else
+            {
+                return;
+            }            
         }
-
-
     }
     IEnumerator Move(Node a, Node b)
     {
@@ -105,17 +121,19 @@ public class SquigBehaviour : NetworkBehaviour
         bool complete = false;
         List<Node> openNodes = new List<Node>();
         List<Node> closedNodes = new List<Node>();
+        List<Node> allNodes = EnemyManager.all_Nodes.ConvertAll(node => new Node(node.pos, node.occupied));
         Node targetNode = new Node();
         Node startNode = new Node();
 
-        foreach (Node node in EnemyManager.all_Nodes)
+        foreach (Node node in allNodes)
         {
+            //Debug.Log("nodes pos:" + node.pos + " " + node.occupied);
             if (node.pos == start)
             {
                 startNode = node;
                 openNodes.Add(startNode);
             }
-            if (node.pos == Vector3.zero)
+            if (node.pos == targetPos)
             {
                 targetNode = node;
             }
@@ -123,6 +141,7 @@ public class SquigBehaviour : NetworkBehaviour
 
         while (!complete)
         {
+            //Debug.Log("opennodes: " + openNodes.Count);
             if (openNodes.Count == 0)
             {
                 Debug.Log("no exit");
@@ -132,7 +151,8 @@ public class SquigBehaviour : NetworkBehaviour
             openNodes.Remove(currentNode);
             closedNodes.Add(currentNode);
 
-            if (currentNode == targetNode)
+            //Debug.Log("compare: " + currentNode.pos + " " + targetNode.pos);
+            if (currentNode.pos == targetNode.pos)
             {
                 complete = true;
                 List<Node> path = new();
@@ -141,21 +161,24 @@ public class SquigBehaviour : NetworkBehaviour
                 while (currentNode.parent != null)
                 {
                     tempPath.Add(currentNode);
+                    //Debug.Log("temppath count: " + tempPath.Count);
                     currentNode = currentNode.parent;
                 }
 
                 path.Add(startNode);                                        // manually add start position
 
-                for (int i = tempPath.Count-1; i >= 0; i--)
+                for (int i = tempPath.Count - 1; i >= 0; i--)
                 {
                     path.Add(tempPath[i]);
                 }
                 return path;
+                //return closedNodes;
             }
             else
             {
                 foreach (Node n in EnemyManager.all_Nodes)
                 {
+                    if (n.occupied) { continue; }
                     if (50 >= Mathf.Pow(currentNode.pos.x - n.pos.x, 2) + Mathf.Pow(currentNode.pos.z - n.pos.z, 2))
                     {
                         if (!closedNodes.Contains(n))
@@ -211,6 +234,12 @@ public class SquigBehaviour : NetworkBehaviour
 }
 public class Node
 {
+    public Node(Vector3 p = new(), bool o = false)
+    {
+        pos = p;
+        occupied = o;
+
+    }
     public Vector3 pos;
     public float cost;
     public Node parent;
@@ -218,4 +247,5 @@ public class Node
     public float h_cost; // h = heuristic cost to target
 
     public int myTileIndex;
+    public bool occupied = false;
 }

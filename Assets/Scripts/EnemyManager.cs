@@ -6,7 +6,7 @@ using Unity.Netcode;
 public class EnemyManager : MonoBehaviour
 {
     public static List<Node> all_Nodes = new List<Node>();
-    public void MakeNodeList(List<Vector3> positions)
+    public List<Node> MakeNodeList(List<Vector3> positions)
     {
         for (int i = 0; i < positions.Count; i++)
         {
@@ -15,27 +15,23 @@ public class EnemyManager : MonoBehaviour
             new_Node.myTileIndex = i;
             all_Nodes.Add(new_Node);
         }
+        return all_Nodes;
     }
 
-    public void Delete(int tileID)
+    public void OccupyNode(int tileID)
     {
-        Node deletedNode = new();
         foreach (Node node in all_Nodes)
         {
-            node.parent = null;
             if (node.myTileIndex == tileID)
             {
-                deletedNode = node;                
-            }
-        }
-
-        all_Nodes.Remove(deletedNode);        
-
-        foreach (GameObject go in GameObject.FindGameObjectsWithTag("Squig"))
-        {
-            if (go.GetComponent<SquigBehaviour>().currentPath.Contains(deletedNode))
-            {
-                go.GetComponent<SquigBehaviour>().obstruction = true;
+                node.occupied = true;
+                foreach (GameObject go in GameObject.FindGameObjectsWithTag("Squig"))
+                {
+                    if (go.GetComponent<SquigBehaviour>().currentPath.Contains(node))
+                    {
+                        go.GetComponent<SquigBehaviour>().obstruction = true;
+                    }
+                }
             }
         }
     }

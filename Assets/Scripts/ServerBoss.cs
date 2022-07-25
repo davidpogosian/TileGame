@@ -27,8 +27,11 @@ public class ServerBoss : NetworkBehaviour
         }
         
         hqHealth.Value = 100;
-        GameObject hq = Instantiate(headQuarters, new Vector3(0, 5f, 0), Quaternion.identity);
-        hq.GetComponent<NetworkObject>().Spawn();
+        GameObject hq = Instantiate(headQuarters, new Vector3(-25f, 5f, -25f), Quaternion.identity);
+        hq.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.Singleton.ConnectedClientsIds[0]); // hq for first player
+
+        GameObject hq2 = Instantiate(headQuarters, new Vector3(25f, 5f, 25f), Quaternion.identity);
+        //hq2.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.Singleton.ConnectedClientsIds[1]); // hq for 2nd player
 
         GameObject db = Instantiate(dbmanager, Vector3.zero, Quaternion.identity);
         db.GetComponent<NetworkObject>().Spawn();
@@ -77,7 +80,7 @@ public class ServerBoss : NetworkBehaviour
     }
     public void DeleteNode(int tileID)
     {
-        GameObject.Find("EnemyManager(Clone)").GetComponent<EnemyManager>().Delete(tileID);
+        GameObject.Find("EnemyManager(Clone)").GetComponent<EnemyManager>().OccupyNode(tileID);
     }
 
     [ServerRpc(RequireOwnership = false)]

@@ -127,6 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0dea375b428a9274288e381f70e751ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gold: 0
   structIndex: 0
   tile: {fileID: 6871846605303052201, guid: e8969e2071b6b1241ac64ae7ebc22484, type: 3}
   building: {fileID: 5342951776789346236, guid: 4034b09a709f7e94fa6fe535dbca4934,
@@ -134,4 +135,8 @@ MonoBehaviour:
   pom: {fileID: 113162442542562975, guid: 429ea03462ba7bd4ab0440d1ba524918, type: 3}
   fireTower: {fileID: 354700060090439682, guid: d2848f478bad7c844b9fb7559a2ece08,
     type: 3}
+  squig: {fileID: 882336246241482207, guid: 45a55772e892c194684b8b680d61045c, type: 3}
+  upgrade1: 0
+  upgrade2: 0
+  upgrade3: 0
   tiles: []
