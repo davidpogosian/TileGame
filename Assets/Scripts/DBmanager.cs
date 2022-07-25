@@ -20,9 +20,9 @@ public class DBmanager : NetworkBehaviour // made dbmanger static?
             RunSql("CREATE TABLE Upgrades (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL unique, upgrade VARCHAR(40));");
             RunSql("CREATE TABLE PandU (player_id INTEGER , upgrade_id INTEGER);");
 
-            RunSql("INSERT INTO Upgrades (upgrade) VALUES ('Vitality');");
-            RunSql("INSERT INTO Upgrades (upgrade) VALUES ('Strength');");
             RunSql("INSERT INTO Upgrades (upgrade) VALUES ('Wall');");
+            RunSql("INSERT INTO Upgrades (upgrade) VALUES ('Tower');");
+            RunSql("INSERT INTO Upgrades (upgrade) VALUES ('Squig');");
         }
         //CreateTServerRpc();
         //AddEntryServerRpc(string guid, int money)
@@ -120,15 +120,17 @@ public class DBmanager : NetworkBehaviour // made dbmanger static?
         }
     }
     [ClientRpc]
-    public void SendUpgradesClientRpc(int upgrade, ClientRpcParams clientRpcParams)
+    public void SendUpgradesClientRpc(int upgrade, ClientRpcParams clientRpcParams) // idk if im using the db properly
     {
         switch (upgrade)
         {
             case 1: 
                 NetworkManager.LocalClient.PlayerObject.GetComponent<PlayerC>().upgrade1 = true;
+                GameObject.Find("UI").GetComponent<UImanager>().Unlock(upgrade);
                 break;
             case 2:
                 NetworkManager.LocalClient.PlayerObject.GetComponent<PlayerC>().upgrade2 = true;
+                GameObject.Find("UI").GetComponent<UImanager>().Unlock(upgrade);
                 break;
         }
     }

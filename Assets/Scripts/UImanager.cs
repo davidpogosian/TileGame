@@ -19,6 +19,10 @@ public class UImanager : NetworkBehaviour
     public GameObject ttUpgrade2;
     public GameObject ttUpgrade3;
 
+    public Button wall;
+    public Button tower;
+    public Button squig;
+
     bool TTup = false;
 
     public bool gameStarted = false;
@@ -64,29 +68,6 @@ public class UImanager : NetworkBehaviour
         }
     }
 
-    private void OnGUI()
-    {
-        GUILayout.BeginArea(new Rect(100, 100, 100, 300));
-
-        if (GUILayout.Button("Wall"))
-        {
-            player.GetComponent<PlayerC>().structIndex = 1;
-            LocalTile.cost = 25;
-        }
-        if (GUILayout.Button("Ball Tower"))
-        {
-            player.GetComponent<PlayerC>().structIndex = 0;
-            LocalTile.cost = 50;
-        }
-        if (GUILayout.Button("Squig"))
-        {
-            player.GetComponent<PlayerC>().structIndex = 2;
-            LocalTile.cost = 100;
-        }
-
-        GUILayout.EndArea();
-    }
-
     public void ToggleTT()
     {
         TTup = true;
@@ -116,7 +97,9 @@ public class UImanager : NetworkBehaviour
         {
             player.GetComponent<PlayerC>().upgrade1 = true;
             player.GetComponent<PlayerC>().gold -= 200;
-            BuySomethingServerRpc("Vitality", PlayerPrefs.GetString("guid"));
+            BuySomethingServerRpc("Wall", PlayerPrefs.GetString("guid"));
+
+            Unlock(1);
         }
     }
 
@@ -126,10 +109,57 @@ public class UImanager : NetworkBehaviour
         {
             player.GetComponent<PlayerC>().upgrade2 = true;
             player.GetComponent<PlayerC>().gold -= 200;
-            BuySomethingServerRpc("Strength", PlayerPrefs.GetString("guid"));
+            BuySomethingServerRpc("Tower", PlayerPrefs.GetString("guid"));
+
+            Unlock(2);
         }
     }
 
+    public void Upgrade3()
+    {
+        if (player.GetComponent<PlayerC>().gold >= 200 && player.GetComponent<PlayerC>().upgrade3 == false)
+        {
+            player.GetComponent<PlayerC>().upgrade3 = true;
+            player.GetComponent<PlayerC>().gold -= 200;
+            BuySomethingServerRpc("Squig", PlayerPrefs.GetString("guid"));
+
+            Unlock(3);
+        }
+    }
+
+    public void Unlock(int upgrade)
+    {
+        switch (upgrade)
+        {
+            case 1:
+                wall.interactable = true;
+                break;
+            case 2:
+                tower.interactable = true;
+                break;
+            case 3:
+                squig.interactable = true;
+                break;
+        }
+    }
+
+    public void WallButton()
+    {
+        player.GetComponent<PlayerC>().structIndex = 1;
+        LocalTile.cost = 25;
+    }
+
+    public void TowerButton()
+    {
+        player.GetComponent<PlayerC>().structIndex = 0;
+        LocalTile.cost = 50;
+    }
+
+    public void SquigButton()
+    {
+        player.GetComponent<PlayerC>().structIndex = 2;
+        LocalTile.cost = 100;
+    }
     [ServerRpc(RequireOwnership = false)]
     public void BuySomethingServerRpc(string item, string guid)
     {
