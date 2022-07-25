@@ -15,7 +15,7 @@ public class ServerBoss : NetworkBehaviour
 
     public GameObject player;
 
-    public NetworkVariable<int> hqHealth = new NetworkVariable<int>();
+    
     public static List<Vector3> serverPivots = new List<Vector3>();
 
     private void Start()
@@ -29,7 +29,7 @@ public class ServerBoss : NetworkBehaviour
             return;
         }
         
-        hqHealth.Value = 100;
+        
         
 
         //GameObject hq2 = Instantiate(headQuarters, new Vector3(25f, 5f, 25f), Quaternion.identity);
@@ -88,10 +88,7 @@ public class ServerBoss : NetworkBehaviour
         GameObject.Find("EnemyManager(Clone)").GetComponent<EnemyManager>().OccupyNode(tileID);
     }
 
-    public void TakeDamage(int mag)
-    {
-        hqHealth.Value -= mag;
-    }
+    
 
     [ServerRpc(RequireOwnership = false)]
     private void SpawnPlayerServerRpc(ulong clientID)

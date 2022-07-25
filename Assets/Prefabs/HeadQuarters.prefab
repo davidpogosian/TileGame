@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3985393520164051819}
   - component: {fileID: 3985393520164051818}
   - component: {fileID: 3985393520164051797}
+  - component: {fileID: 8776151307900424094}
   m_Layer: 3
   m_Name: HeadQuarters
   m_TagString: HeadQuarters
@@ -114,3 +115,15 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &8776151307900424094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3985393520164051796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f9c5dd9a18d21d43b921cff06f01c1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -14,7 +14,7 @@ public class SquigBehaviour : NetworkBehaviour
     bool blocked = false;
     public bool obstruction = false;
     public Vector3 targetPos;
-    GameObject enemyHq;
+    public GameObject enemyHq;
 
     //A*:
     List<Node> openNodes = new List<Node>();
@@ -70,8 +70,8 @@ public class SquigBehaviour : NetworkBehaviour
             if (!blocked)
             {
                 DeclareVacantClientRpc(currentPath[currentPath.Count - 2].myTileIndex); // cleanup
-                //enemyHq.GetComponent<ServerBoss>().TakeDamage(10);
-                //Debug.Log("new hp is: " + enemyHq.GetComponent<ServerBoss>().hqHealth.Value);
+                enemyHq.GetComponent<HQscript>().TakeDamage(10);
+                Debug.Log("new hp is: " + enemyHq.GetComponent<HQscript>().hqHealth.Value);
                 Destroy(gameObject); // not good
             }
             else
@@ -143,7 +143,6 @@ public class SquigBehaviour : NetworkBehaviour
             if (node.pos == targetPos)
             {
                 targetNode = node;
-                Debug.Log(targetNode.pos);
             }
         }
 
