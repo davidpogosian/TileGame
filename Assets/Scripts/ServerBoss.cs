@@ -24,16 +24,7 @@ public class ServerBoss : NetworkBehaviour
         {
             SpawnPlayerServerRpc(NetworkManager.Singleton.LocalClientId);
 
-            if (NetworkManager.LocalClientId % 2 == 0)
-            {
-                GameObject hq = Instantiate(headQuarters, new Vector3(-25f, 5f, -25f), Quaternion.identity);
-                hq.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.Singleton.ConnectedClientsIds[1]); // hq for 2nd player
-            }
-            else
-            {
-                GameObject hq = Instantiate(headQuarters, new Vector3(25f, 5f, 25f), Quaternion.identity);
-                hq.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.Singleton.ConnectedClientsIds[0]); // hq for first player
-            }
+            SpawnPlayerHqServerRpc(NetworkManager.Singleton.LocalClientId);
             
             return;
         }
@@ -71,8 +62,8 @@ public class ServerBoss : NetworkBehaviour
             GameObject pl = Instantiate(player, new Vector3(0, 20, 0), Quaternion.identity);
             pl.GetComponent<NetworkObject>().SpawnAsPlayerObject(NetworkManager.Singleton.LocalClientId);
 
-            GameObject hq = Instantiate(headQuarters, new Vector3(-25f, 5f, -25f), Quaternion.identity);
-            hq.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.Singleton.ConnectedClientsIds[0]); // hq for first player
+            GameObject hq = Instantiate(headQuarters, new Vector3(25f, 5f, 25f), Quaternion.identity);
+            hq.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.LocalClientId); // hq for first player
         }        
     }
     IEnumerator Recess()
@@ -107,5 +98,21 @@ public class ServerBoss : NetworkBehaviour
     {
         GameObject pl = Instantiate(player, new Vector3(0, 20, 0), Quaternion.identity);
         pl.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SpawnPlayerHqServerRpc(ulong clientID)
+    {
+        Vector3 pos;
+        if (clientID % 2 == 0)
+        {
+            pos = new(25, 0, 25);
+        }
+        else
+        {
+            pos = new(-25, 0, -25);
+        }
+        GameObject hq = Instantiate(headQuarters, pos, Quaternion.identity);
+        hq.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
     }
 }

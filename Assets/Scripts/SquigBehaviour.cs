@@ -13,7 +13,7 @@ public class SquigBehaviour : NetworkBehaviour
     public int onStep = 0;
     bool blocked = false;
     public bool obstruction = false;
-    Vector3 targetPos;
+    public Vector3 targetPos;
     GameObject enemyHq;
 
     //A*:
@@ -30,9 +30,9 @@ public class SquigBehaviour : NetworkBehaviour
         squigHP.Value = 100;
         foreach (GameObject go in GameObject.FindGameObjectsWithTag("HeadQuarters"))
         {
-            if (!go.GetComponent<NetworkObject>().IsOwner)
+            if (go.GetComponent<NetworkObject>().OwnerClientId != NetworkObject.OwnerClientId)
             {
-                targetPos = go.transform.position;
+                targetPos = new Vector3(go.transform.position.x, 0, go.transform.position.z);
                 enemyHq = go;
             }
         }
@@ -70,8 +70,8 @@ public class SquigBehaviour : NetworkBehaviour
             if (!blocked)
             {
                 DeclareVacantClientRpc(currentPath[currentPath.Count - 2].myTileIndex); // cleanup
-                enemyHq.GetComponent<ServerBoss>().TakeDamage(10);
-                Debug.Log("new hp is: " + enemyHq.GetComponent<ServerBoss>().hqHealth.Value);
+                //enemyHq.GetComponent<ServerBoss>().TakeDamage(10);
+                //Debug.Log("new hp is: " + enemyHq.GetComponent<ServerBoss>().hqHealth.Value);
                 Destroy(gameObject); // not good
             }
             else
@@ -135,7 +135,6 @@ public class SquigBehaviour : NetworkBehaviour
 
         foreach (Node node in allNodes)
         {
-            //Debug.Log("nodes pos:" + node.pos + " " + node.occupied);
             if (node.pos == start)
             {
                 startNode = node;
@@ -144,6 +143,7 @@ public class SquigBehaviour : NetworkBehaviour
             if (node.pos == targetPos)
             {
                 targetNode = node;
+                Debug.Log(targetNode.pos);
             }
         }
 
