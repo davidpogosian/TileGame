@@ -15,6 +15,13 @@ public class SquigBehaviour : NetworkBehaviour
     public bool obstruction = false;
     Vector3 targetPos;
 
+    //A*:
+    List<Node> openNodes = new List<Node>();
+    List<Node> closedNodes = new List<Node>();
+    List<Node> allNodes = new List<Node>();
+    List<Node> path = new();
+    List<Node> tempPath = new();
+
     private void Start()
     {
         if (!IsServer) { return; }
@@ -58,7 +65,6 @@ public class SquigBehaviour : NetworkBehaviour
         }
         else
         {
-            Debug.Log("smack");
             if (!blocked)
             {
                 DeclareVacantClientRpc(currentPath[currentPath.Count - 2].myTileIndex); // cleanup
@@ -118,10 +124,10 @@ public class SquigBehaviour : NetworkBehaviour
 
     private List<Node> AStarPath(Vector3 start)
     {
+        closedNodes.Clear();
+        openNodes.Clear();
         bool complete = false;
-        List<Node> openNodes = new List<Node>();
-        List<Node> closedNodes = new List<Node>();
-        List<Node> allNodes = EnemyManager.all_Nodes.ConvertAll(node => new Node(node.pos, node.occupied));
+        allNodes = EnemyManager.all_Nodes.ConvertAll(node => new Node(node.pos, node.occupied));
         Node targetNode = new Node();
         Node startNode = new Node();
 
@@ -154,9 +160,9 @@ public class SquigBehaviour : NetworkBehaviour
             //Debug.Log("compare: " + currentNode.pos + " " + targetNode.pos);
             if (currentNode.pos == targetNode.pos)
             {
-                complete = true;
-                List<Node> path = new();
-                List<Node> tempPath = new();
+                complete = true;                
+                path.Clear();
+                tempPath.Clear();
 
                 while (currentNode.parent != null)
                 {
