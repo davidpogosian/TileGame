@@ -23,14 +23,25 @@ public class ServerBoss : NetworkBehaviour
         if (!NetworkManager.Singleton.IsServer) //race?
         {
             SpawnPlayerServerRpc(NetworkManager.Singleton.LocalClientId);
+
+            if (NetworkManager.LocalClientId % 2 == 0)
+            {
+                GameObject hq = Instantiate(headQuarters, new Vector3(-25f, 5f, -25f), Quaternion.identity);
+                hq.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.Singleton.ConnectedClientsIds[1]); // hq for 2nd player
+            }
+            else
+            {
+                GameObject hq = Instantiate(headQuarters, new Vector3(25f, 5f, 25f), Quaternion.identity);
+                hq.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.Singleton.ConnectedClientsIds[0]); // hq for first player
+            }
+            
             return;
         }
         
         hqHealth.Value = 100;
-        GameObject hq = Instantiate(headQuarters, new Vector3(-25f, 5f, -25f), Quaternion.identity);
-        hq.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.Singleton.ConnectedClientsIds[0]); // hq for first player
+        
 
-        GameObject hq2 = Instantiate(headQuarters, new Vector3(25f, 5f, 25f), Quaternion.identity);
+        //GameObject hq2 = Instantiate(headQuarters, new Vector3(25f, 5f, 25f), Quaternion.identity);
         //hq2.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.Singleton.ConnectedClientsIds[1]); // hq for 2nd player
 
         GameObject db = Instantiate(dbmanager, Vector3.zero, Quaternion.identity);
@@ -59,6 +70,9 @@ public class ServerBoss : NetworkBehaviour
         {
             GameObject pl = Instantiate(player, new Vector3(0, 20, 0), Quaternion.identity);
             pl.GetComponent<NetworkObject>().SpawnAsPlayerObject(NetworkManager.Singleton.LocalClientId);
+
+            GameObject hq = Instantiate(headQuarters, new Vector3(-25f, 5f, -25f), Quaternion.identity);
+            hq.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.Singleton.ConnectedClientsIds[0]); // hq for first player
         }        
     }
     IEnumerator Recess()
@@ -81,6 +95,11 @@ public class ServerBoss : NetworkBehaviour
     public void DeleteNode(int tileID)
     {
         GameObject.Find("EnemyManager(Clone)").GetComponent<EnemyManager>().OccupyNode(tileID);
+    }
+
+    public void TakeDamage(int mag)
+    {
+        hqHealth.Value -= mag;
     }
 
     [ServerRpc(RequireOwnership = false)]

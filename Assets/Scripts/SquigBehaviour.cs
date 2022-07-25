@@ -14,6 +14,7 @@ public class SquigBehaviour : NetworkBehaviour
     bool blocked = false;
     public bool obstruction = false;
     Vector3 targetPos;
+    GameObject enemyHq;
 
     //A*:
     List<Node> openNodes = new List<Node>();
@@ -32,10 +33,11 @@ public class SquigBehaviour : NetworkBehaviour
             if (!go.GetComponent<NetworkObject>().IsOwner)
             {
                 targetPos = go.transform.position;
+                enemyHq = go;
             }
         }
 
-        Debug.Log("target: " + targetPos);
+        //Debug.Log("target: " + targetPos);
     }
 
     void Update()
@@ -68,8 +70,8 @@ public class SquigBehaviour : NetworkBehaviour
             if (!blocked)
             {
                 DeclareVacantClientRpc(currentPath[currentPath.Count - 2].myTileIndex); // cleanup
-                GameObject.Find("ServerBoss(Clone)").GetComponent<ServerBoss>().hqHealth.Value -= 10;
-                Debug.Log("new hp is: " + GameObject.Find("ServerBoss(Clone)").GetComponent<ServerBoss>().hqHealth.Value);
+                enemyHq.GetComponent<ServerBoss>().TakeDamage(10);
+                Debug.Log("new hp is: " + enemyHq.GetComponent<ServerBoss>().hqHealth.Value);
                 Destroy(gameObject); // not good
             }
             else
