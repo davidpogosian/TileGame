@@ -11,7 +11,7 @@ public class LocalTile : MonoBehaviour
 
     public int myIndex;
     public bool occupied = false;
-    public static int cost = 50;
+    public static int cost = 0;
 
     private void Start()
     {        

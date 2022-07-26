@@ -8,6 +8,7 @@ public class HQscript : NetworkBehaviour
     public NetworkVariable<int> hqHealth = new NetworkVariable<int>();
     void Start()
     {
+        if (!IsServer) { return; }
         hqHealth.Value = 100;
     }
 

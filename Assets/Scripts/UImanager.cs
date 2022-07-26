@@ -14,14 +14,12 @@ public class UImanager : NetworkBehaviour
     float timeLeft = 5;
 
     public GameObject ttButton;
-    public GameObject ttBackground;
-    public GameObject ttUpgrade1;
-    public GameObject ttUpgrade2;
-    public GameObject ttUpgrade3;
 
     public Button wall;
     public Button tower;
     public Button squig;
+
+    public GameObject techWrapper;
 
     bool TTup = false;
 
@@ -50,6 +48,7 @@ public class UImanager : NetworkBehaviour
 
             if (Input.GetKeyDown(KeyCode.Escape) && TTup == true)
             {
+                TTup = false;
                 ToggleTT();
             }
 
@@ -71,11 +70,7 @@ public class UImanager : NetworkBehaviour
     public void ToggleTT()
     {
         TTup = true;
-        ttBackground.SetActive(!ttBackground.activeSelf);
-        ttUpgrade1.SetActive(!ttUpgrade1.activeSelf);
-        ttUpgrade2.SetActive(!ttUpgrade2.activeSelf);
-        ttUpgrade3.SetActive(!ttUpgrade3.activeSelf);
-        ttButton.SetActive(!ttButton.activeSelf);
+        techWrapper.SetActive(!techWrapper.activeSelf);
     }
 
     IEnumerator WaitForPlayer()
@@ -91,11 +86,11 @@ public class UImanager : NetworkBehaviour
         db = dbObj.GetComponent<DBmanager>();
     }
 
-    public void Upgrade1()
+    public void Upgrade1() // unlock struct index 1 aka wall
     {
-        if (player.GetComponent<PlayerC>().gold >= 200 && player.GetComponent<PlayerC>().upgrade1 == false)
+        if (player.GetComponent<PlayerC>().gold >= 200 && player.GetComponent<PlayerC>().wallUpgrade == false)
         {
-            player.GetComponent<PlayerC>().upgrade1 = true;
+            player.GetComponent<PlayerC>().wallUpgrade = true;
             player.GetComponent<PlayerC>().gold -= 200;
             BuySomethingServerRpc("Wall", PlayerPrefs.GetString("guid"));
 
@@ -105,9 +100,9 @@ public class UImanager : NetworkBehaviour
 
     public void Upgrade2()
     {
-        if (player.GetComponent<PlayerC>().gold >= 200 && player.GetComponent<PlayerC>().upgrade2 == false)
+        if (player.GetComponent<PlayerC>().gold >= 200 && player.GetComponent<PlayerC>().towerUpgrade == false)
         {
-            player.GetComponent<PlayerC>().upgrade2 = true;
+            player.GetComponent<PlayerC>().towerUpgrade = true;
             player.GetComponent<PlayerC>().gold -= 200;
             BuySomethingServerRpc("Tower", PlayerPrefs.GetString("guid"));
 
@@ -117,9 +112,9 @@ public class UImanager : NetworkBehaviour
 
     public void Upgrade3()
     {
-        if (player.GetComponent<PlayerC>().gold >= 200 && player.GetComponent<PlayerC>().upgrade3 == false)
+        if (player.GetComponent<PlayerC>().gold >= 200 && player.GetComponent<PlayerC>().squigUpgrade == false)
         {
-            player.GetComponent<PlayerC>().upgrade3 = true;
+            player.GetComponent<PlayerC>().squigUpgrade = true;
             player.GetComponent<PlayerC>().gold -= 200;
             BuySomethingServerRpc("Squig", PlayerPrefs.GetString("guid"));
 
@@ -151,13 +146,13 @@ public class UImanager : NetworkBehaviour
 
     public void TowerButton()
     {
-        player.GetComponent<PlayerC>().structIndex = 0;
+        player.GetComponent<PlayerC>().structIndex = 2;
         LocalTile.cost = 50;
     }
 
     public void SquigButton()
     {
-        player.GetComponent<PlayerC>().structIndex = 2;
+        player.GetComponent<PlayerC>().structIndex = 3;
         LocalTile.cost = 100;
     }
     [ServerRpc(RequireOwnership = false)]

@@ -13,7 +13,6 @@ namespace HelloWorld
         public GameObject serverBoss;
         private void Start()
         {
-            PlayerPrefs.DeleteAll(); // DELETE
             NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
             NetworkManager.Singleton.GetComponent<Unity.Netcode.Transports.UTP.UnityTransport>().ConnectionData.Port = ushort.Parse("4444"); // maybe wont work on UNET
 
@@ -46,7 +45,6 @@ namespace HelloWorld
                 Debug.Log("Your new guid is: " + g);
                 PlayerPrefs.SetString("guid", g.ToString());
                 PlayerPrefs.SetInt("money", 0);
-                PlayerPrefs.SetInt("newPlayer", 1); // need to add row in DB?
                 PlayerPrefs.Save();
             }
         }

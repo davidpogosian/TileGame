@@ -21,18 +21,18 @@ public class TechTree : NetworkBehaviour
 
         if (GUILayout.Button("Upgrade1"))
         {
-            if (player.GetComponent<PlayerC>().gold >= 200 && player.GetComponent<PlayerC>().upgrade1 == false)
+            if (player.GetComponent<PlayerC>().gold >= 200 && player.GetComponent<PlayerC>().wallUpgrade == false)
             {
-                player.GetComponent<PlayerC>().upgrade1 = true;
+                player.GetComponent<PlayerC>().wallUpgrade = true;
                 player.GetComponent<PlayerC>().gold -= 200;
                 BuySomethingServerRpc("Vitality", PlayerPrefs.GetString("guid"));
             }
         }
         if (GUILayout.Button("Upgrade2"))
         {
-            if (player.GetComponent<PlayerC>().gold >= 200 && player.GetComponent<PlayerC>().upgrade2 == false)
+            if (player.GetComponent<PlayerC>().gold >= 200 && player.GetComponent<PlayerC>().towerUpgrade == false)
             {
-                player.GetComponent<PlayerC>().upgrade2 = true;
+                player.GetComponent<PlayerC>().towerUpgrade = true;
                 player.GetComponent<PlayerC>().gold -= 200;
                 BuySomethingServerRpc("Strength", PlayerPrefs.GetString("guid"));
             }

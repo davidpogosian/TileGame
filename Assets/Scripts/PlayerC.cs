@@ -16,12 +16,12 @@ public class PlayerC : NetworkBehaviour
     public GameObject tile;
     public GameObject building;
     public GameObject pom;
-    public GameObject fireTower;
+    public GameObject wall;
     public GameObject squig;
 
-    public bool upgrade1 = false;
-    public bool upgrade2 = false;
-    public bool upgrade3 = false;
+    public bool wallUpgrade = false;
+    public bool towerUpgrade = false;
+    public bool squigUpgrade = false;
 
     public List<GameObject> tiles = new List<GameObject>();
     Vector3 myPosition = new();
@@ -79,13 +79,8 @@ public class PlayerC : NetworkBehaviour
         }
         db = dbObj.GetComponent<DBmanager>();
 
-        if (PlayerPrefs.GetInt("newPlayer") == 1)
-        {
-            PlayerPrefs.SetInt("newPlayer", 0);
-            PlayerPrefs.Save();
-            db.RunSqlServerRpc("INSERT INTO Players (guid) VALUES ('" + PlayerPrefs.GetString("guid") + "');");
-        }
-        // Load my upgrades!
+        db.AddPlayerServerRpc(PlayerPrefs.GetString("guid"));               // add guid to Players table
+
         db.PullPlayerUpgradesServerRpc(PlayerPrefs.GetString("guid"), NetworkManager.LocalClient.ClientId);
 
 
@@ -96,6 +91,7 @@ public class PlayerC : NetworkBehaviour
         //db.GetComponent<DBmanager>().EditEntryServerRpc(PlayerPrefs.GetString("guid"), 0);
 
     }
+
 
     [ServerRpc]
     public void ClickedServerRpc(int structIndex, Vector3 pos, ulong clientID, int tileIndex)
@@ -112,7 +108,9 @@ public class PlayerC : NetworkBehaviour
         //GameObject bullet = Instantiate(pom, pos + new Vector3(0, 6, 0), Quaternion.identity);
         //bullet.transform.parent = go.transform;
         //bullet.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
-        if (structIndex != 2)
+        if (structIndex == 0) { return; }
+
+        if (structIndex != 3)
         {
             GameObject.Find("ServerBoss(Clone)").GetComponent<ServerBoss>().DeleteNode(tileIndex);
             DeclareOccupiedClientRpc(tileIndex);
@@ -123,18 +121,18 @@ public class PlayerC : NetworkBehaviour
 
         switch (structIndex)
         {
-            case 0:
+            case 1:
+                GameObject ft = Instantiate(wall, pos, Quaternion.identity);
+                ft.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
+                break;
+            case 2:
                 GameObject go = Instantiate(building, pos, Quaternion.identity);
                 GameObject bullet = Instantiate(pom, pos + new Vector3(0, 6, 0), Quaternion.identity);
                 go.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
                 bullet.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
                 bullet.transform.parent = go.transform;
                 break;
-            case 1:
-                GameObject ft = Instantiate(fireTower, pos, Quaternion.identity);
-                ft.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
-                break;
-            case 2:
+            case 3:
                 GameObject sq = Instantiate(squig, pos, Quaternion.identity);
                 sq.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
                 break;

@@ -69,8 +69,12 @@ public class SquigBehaviour : NetworkBehaviour
             if (!blocked)
             {
                 DeclareVacantClientRpc(currentPath[currentPath.Count - 2].myTileIndex); // cleanup
-                enemyHq.GetComponent<HQscript>().TakeDamage(10);
-                Debug.Log("new hp is: " + enemyHq.GetComponent<HQscript>().hqHealth.Value);
+                if (!NetworkManager.IsHost) // skip if just testing as host 
+                {
+                    enemyHq.GetComponent<HQscript>().TakeDamage(10);
+                    Debug.Log("new hp is: " + enemyHq.GetComponent<HQscript>().hqHealth.Value);
+                }
+                
                 Destroy(gameObject); // not good
             }
             else

@@ -24,6 +24,8 @@ public class DBmanager : NetworkBehaviour // made dbmanger static?
             RunSql("INSERT INTO Upgrades (upgrade) VALUES ('Tower');");
             RunSql("INSERT INTO Upgrades (upgrade) VALUES ('Squig');");
         }
+
+        
         //CreateTServerRpc();
         //AddEntryServerRpc(string guid, int money)
         //EditEntryServerRpc(string guid, int newMoney)
@@ -125,13 +127,41 @@ public class DBmanager : NetworkBehaviour // made dbmanger static?
         switch (upgrade)
         {
             case 1: 
-                NetworkManager.LocalClient.PlayerObject.GetComponent<PlayerC>().upgrade1 = true;
-                GameObject.Find("UI").GetComponent<UImanager>().Unlock(upgrade);
+                NetworkManager.LocalClient.PlayerObject.GetComponent<PlayerC>().wallUpgrade = true;
+                GameObject.Find("UI(Clone)").GetComponent<UImanager>().Unlock(upgrade);
                 break;
             case 2:
-                NetworkManager.LocalClient.PlayerObject.GetComponent<PlayerC>().upgrade2 = true;
-                GameObject.Find("UI").GetComponent<UImanager>().Unlock(upgrade);
+                NetworkManager.LocalClient.PlayerObject.GetComponent<PlayerC>().towerUpgrade = true;
+                GameObject.Find("UI(Clone)").GetComponent<UImanager>().Unlock(upgrade);
                 break;
+        }
+    }
+    [ServerRpc(RequireOwnership = false)]
+    public void AddPlayerServerRpc(string guid)
+    {
+        int playerInDb = 0;
+        using (var connection = new SqliteConnection(dbName))
+        {
+            connection.Open();
+
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = string.Format("SELECT COUNT(1) FROM Players WHERE guid = '{0}'; ", guid);
+                using (IDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        playerInDb = int.Parse(reader["COUNT(1)"].ToString());                        
+                    }
+                    reader.Close();
+                }
+            }
+            connection.Close();
+
+            if (playerInDb == 0)
+            {
+                RunSql(string.Format("INSERT INTO Players (guid) VALUES ('{0}');", guid));
+            }
         }
     }
     //public void CreateT(string tableName)
