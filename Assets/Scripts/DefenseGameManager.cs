@@ -14,7 +14,7 @@ namespace HelloWorld
         private void Start()
         {
             NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
-            NetworkManager.Singleton.GetComponent<Unity.Netcode.Transports.UTP.UnityTransport>().ConnectionData.Port = ushort.Parse("4444"); // maybe wont work on UNET
+            
 
             string[] args = System.Environment.GetCommandLineArgs();
             for (int i = 0; i < args.Length; i++)
@@ -29,9 +29,16 @@ namespace HelloWorld
                 {
                     NetworkManager.Singleton.StartClient();
                 }
-                if (args[i] == "4444")
+                if (i == 1)
                 {
-                    NetworkManager.Singleton.GetComponent<Unity.Netcode.Transports.UTP.UnityTransport>().ConnectionData.Port = ushort.Parse("4444"); // maybe wont work on UNET
+                    try 
+                    {
+                        NetworkManager.Singleton.GetComponent<Unity.Netcode.Transports.UTP.UnityTransport>().ConnectionData.Port = ushort.Parse(args[1]); // maybe wont work on UNET
+                    }
+                    catch (FormatException)
+                    {
+                        Debug.Log("Format exception caught");
+                    }
                 }
             }
 

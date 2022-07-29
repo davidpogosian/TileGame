@@ -134,6 +134,10 @@ public class DBmanager : NetworkBehaviour // made dbmanger static?
                 NetworkManager.LocalClient.PlayerObject.GetComponent<PlayerC>().towerUpgrade = true;
                 GameObject.Find("UI(Clone)").GetComponent<UImanager>().Unlock(upgrade);
                 break;
+            case 3:
+                NetworkManager.LocalClient.PlayerObject.GetComponent<PlayerC>().squigUpgrade = true;
+                GameObject.Find("UI(Clone)").GetComponent<UImanager>().Unlock(upgrade);
+                break;
         }
     }
     [ServerRpc(RequireOwnership = false)]

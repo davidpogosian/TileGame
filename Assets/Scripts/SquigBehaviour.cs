@@ -121,7 +121,7 @@ public class SquigBehaviour : NetworkBehaviour
             {
                 if (clientID == client.Key)
                 {
-                    client.Value.PlayerObject.gameObject.GetComponent<PlayerC>().gold += 50;
+                    //client.Value.PlayerObject.gameObject.GetComponent<PlayerC>().gold += 50; // grant gold on kill
                 }
             }
         }

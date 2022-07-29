@@ -153,7 +153,7 @@ public class Building : NetworkBehaviour
         Collider[] hitEnemies = Physics.OverlapSphere(myBullet.transform.position, 5f, 64);
         foreach (Collider enemy in hitEnemies)
         {
-            //enemy.transform.parent.gameObject.GetComponent<SquigBehaviour>().TakeDamage(34, gameObject.GetComponent<NetworkObject>().OwnerClientId);
+            enemy.transform.parent.gameObject.GetComponent<SquigBehaviour>().TakeDamage(34, gameObject.GetComponent<NetworkObject>().OwnerClientId);
         }
         myBullet.SetActive(false);
         myBullet.transform.position = ogBulletPos;

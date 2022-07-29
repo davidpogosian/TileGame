@@ -81,7 +81,7 @@ public class PlayerC : NetworkBehaviour
 
         db.AddPlayerServerRpc(PlayerPrefs.GetString("guid"));               // add guid to Players table
 
-        db.PullPlayerUpgradesServerRpc(PlayerPrefs.GetString("guid"), NetworkManager.LocalClient.ClientId);
+        db.PullPlayerUpgradesServerRpc(PlayerPrefs.GetString("guid"), NetworkManager.LocalClient.ClientId); // load upgrades
 
 
         /*db.CreateTServerRpc();*/ // make sure table is on server
