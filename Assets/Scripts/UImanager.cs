@@ -155,6 +155,12 @@ public class UImanager : NetworkBehaviour
         player.GetComponent<PlayerC>().structIndex = 3;
         LocalTile.cost = 100;
     }
+
+    public void FarmButton()
+    {
+        player.GetComponent<PlayerC>().structIndex = 4;
+        LocalTile.cost = 100;
+    }
     [ServerRpc(RequireOwnership = false)]
     public void BuySomethingServerRpc(string item, string guid)
     {

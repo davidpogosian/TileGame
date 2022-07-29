@@ -53,7 +53,7 @@ public class ServerBoss : NetworkBehaviour
         }
 
         GameObject em = Instantiate(enemyManager, Vector3.zero, Quaternion.identity);
-        em.GetComponent<EnemyManager>().MakeNodeList(serverPivots);
+        //em.GetComponent<EnemyManager>().MakeNodeList(serverPivots);
 
         StartCoroutine(Recess());
 
@@ -83,7 +83,7 @@ public class ServerBoss : NetworkBehaviour
         //    yield return new WaitForSeconds(5);
         //}
     }
-    public void DeleteNode(int tileID)
+    public void OccupyNodeFromServer(int tileID)
     {
         GameObject.Find("EnemyManager(Clone)").GetComponent<EnemyManager>().OccupyNode(tileID);
     }

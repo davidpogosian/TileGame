@@ -18,6 +18,7 @@ public class PlayerC : NetworkBehaviour
     public GameObject pom;
     public GameObject wall;
     public GameObject squig;
+    public GameObject farm;
 
     public bool wallUpgrade = false;
     public bool towerUpgrade = false;
@@ -112,7 +113,7 @@ public class PlayerC : NetworkBehaviour
 
         if (structIndex != 3)
         {
-            GameObject.Find("ServerBoss(Clone)").GetComponent<ServerBoss>().DeleteNode(tileIndex);
+            GameObject.Find("ServerBoss(Clone)").GetComponent<ServerBoss>().OccupyNodeFromServer(tileIndex);
             DeclareOccupiedClientRpc(tileIndex);
         }
         
@@ -135,6 +136,10 @@ public class PlayerC : NetworkBehaviour
             case 3:
                 GameObject sq = Instantiate(squig, pos, Quaternion.identity);
                 sq.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
+                break;
+            case 4:
+                GameObject fa = Instantiate(farm, pos, Quaternion.identity);
+                fa.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
                 break;
         }
     }

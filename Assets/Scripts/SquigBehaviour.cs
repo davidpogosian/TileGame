@@ -132,7 +132,7 @@ public class SquigBehaviour : NetworkBehaviour
         closedNodes.Clear();
         openNodes.Clear();
         bool complete = false;
-        allNodes = EnemyManager.all_Nodes.ConvertAll(node => new Node(node.pos, node.occupied));
+        allNodes = EnemyManager.all_Nodes.ConvertAll(node => new Node(node.pos, node.occupied, node.neighbors));
         Node targetNode = new Node();
         Node startNode = new Node();
 
@@ -143,6 +143,7 @@ public class SquigBehaviour : NetworkBehaviour
                 startNode = node;
                 openNodes.Add(startNode);
             }
+            
             if (node.pos == targetPos)
             {
                 targetNode = node;
@@ -186,11 +187,9 @@ public class SquigBehaviour : NetworkBehaviour
             }
             else
             {
-                foreach (Node n in EnemyManager.all_Nodes)
+                foreach (Node n in currentNode.neighbors)
                 {
                     if (n.occupied) { continue; }
-                    if (50 >= Mathf.Pow(currentNode.pos.x - n.pos.x, 2) + Mathf.Pow(currentNode.pos.z - n.pos.z, 2))
-                    {
                         if (!closedNodes.Contains(n))
                         {
                             float distToStart = (Mathf.Abs(n.pos.x - startNode.pos.x) / 5 + Mathf.Abs(n.pos.z - startNode.pos.z) / 5) * 25;
@@ -207,7 +206,6 @@ public class SquigBehaviour : NetworkBehaviour
                                 }
                             }
                         }
-                    }
                 }
             }
         }
@@ -244,15 +242,16 @@ public class SquigBehaviour : NetworkBehaviour
 }
 public class Node
 {
-    public Node(Vector3 p = new(), bool o = false)
+    public Node(Vector3 p = new(), bool o = false, List<Node> n = null)
     {
         pos = p;
         occupied = o;
-
+        neighbors = n;
     }
     public Vector3 pos;
     public float cost;
     public Node parent;
+    public List<Node> neighbors = new List<Node>();
     public float g_cost; // g = cost from start
     public float h_cost; // h = heuristic cost to target
 
