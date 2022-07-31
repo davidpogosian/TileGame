@@ -25,6 +25,7 @@ public class PlayerC : NetworkBehaviour
     public bool squigUpgrade = false;
 
     public List<GameObject> tiles = new List<GameObject>();
+    public List<GameObject> farms = new List<GameObject>();
     Vector3 myPosition = new();
     public override void OnNetworkSpawn()
     {
@@ -93,7 +94,6 @@ public class PlayerC : NetworkBehaviour
 
     }
 
-
     [ServerRpc]
     public void ClickedServerRpc(int structIndex, Vector3 pos, ulong clientID, int tileIndex)
     {
@@ -140,6 +140,8 @@ public class PlayerC : NetworkBehaviour
             case 4:
                 GameObject fa = Instantiate(farm, pos, Quaternion.identity);
                 fa.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
+                NetworkManager.ConnectedClients[clientID].PlayerObject.GetComponent<PlayerC>().farms.Add(fa); // add to farms on PlayerC
+                fa.GetComponent<Farm>().index.Value = NetworkManager.ConnectedClients[clientID].PlayerObject.GetComponent<PlayerC>().farms.IndexOf(fa); // assign index to farm
                 break;
         }
     }
